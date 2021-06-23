@@ -12,15 +12,13 @@ const createUser = async (userBody) => {
   const userPassword = userBody;
   userPassword.password = await codifier.codifier(userBody.password);
 
-  const exist = await User.findOne( { where: {cpf: userBody.cpf } });
-  console.log(exist);
+  const exist = await User.findOne({ where: { cpf: userBody.cpf } });
   let user;
   if (!exist) {
     user = await User.create(userPassword);
   } else {
     throw new ApiError(httpStatus.NOT_FOUND, 'User found');
   }
-
 
   return user;
 };
@@ -69,8 +67,8 @@ const updateUserById = async (userId, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const userPassword = userBody;
-  userPassword.password = await codifier.codifier(userBody.password);
+  const userPassword = updateBody;
+  userPassword.password = await codifier.codifier(updateBody.password);
   Object.assign(user, userPassword);
   await user.save();
   return user;

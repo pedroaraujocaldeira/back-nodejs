@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
-const Token = require('../models/Session');
+const Session = require('../models/Session');
 const { tokenTypes } = require('../config/tokens');
 const userService = require('./user.service');
 const ApiError = require('../utils/ApiError');
@@ -34,7 +34,7 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
  * @returns {Promise<Token>}
  */
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
-  const tokenDoc = await Token.create({
+  const tokenDoc = await Session.create({
     token,
     user_id: userId,
     expires: expires.toDate(),
@@ -45,6 +45,14 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
   return tokenDoc;
 };
 
+const removeToken = async (id) => {
+  await Session.destroy({
+    where: {
+      id,
+    },
+  });
+};
+
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
  * @param {string} token
@@ -53,7 +61,7 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  */
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await Token.findOne({ where: { token, type, user_id: payload.sub, blacklisted: false } });
+  const tokenDoc = await Session.findOne({ where: { token, type, user_id: payload.sub, blacklisted: false } });
 
   if (!tokenDoc) {
     throw new Error('Token not found');
@@ -109,4 +117,5 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
+  removeToken,
 };
