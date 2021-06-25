@@ -26,12 +26,12 @@ const loginUserWithCpfAndPassword = async (cpf, password) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
-  const refreshTokenDoc = await Token.findOne({ token: refreshToken, type: tokenTypes.REFRESH });
+  const refreshTokenDoc = await Token.findOne({ where: { token: refreshToken, type: tokenTypes.REFRESH } });
 
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
-  await refreshTokenDoc.remove();
+  await sessionService.removeToken(refreshTokenDoc.id);
 };
 
 /**

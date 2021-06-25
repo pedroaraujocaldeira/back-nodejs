@@ -47,5 +47,5 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  register
+  register,
 };
