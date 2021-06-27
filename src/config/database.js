@@ -9,7 +9,11 @@ module.exports = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   url: process.env.DATABASE_URL,
+  ssl: true,
   define: {
     timestamps: true,
+  },
+  dialectOptions: {
+    ssl: true,
   },
 };
