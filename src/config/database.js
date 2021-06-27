@@ -14,6 +14,10 @@ module.exports = {
     timestamps: true,
   },
   dialectOptions: {
-    ssl: true,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+    keepAlive: true,
   },
 };
