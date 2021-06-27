@@ -4,7 +4,8 @@ const database = require('../config/database');
 const User = require('../models/User');
 const Session = require('../models/Session');
 
-const connection = new Sequelize(database.database, database.username, database.password, database);
+// const connection = new Sequelize(database.database, database.username, database.password, database);
+const connection = new Sequelize(database.url);
 
 User.init(connection);
 Session.init(connection);
